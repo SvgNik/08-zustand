@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import NoteForm from "@/components/NoteForm/NoteForm";
-import css from "./CreateNote.module.css"; // Переконайся, що назва файлу збігається
+import css from "./CreateNote.module.css";
 
 export const metadata: Metadata = {
   title: "Створення нотатки | NoteHub",
