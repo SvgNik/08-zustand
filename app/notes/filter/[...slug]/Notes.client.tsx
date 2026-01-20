@@ -11,32 +11,25 @@ import Pagination from "@/components/Pagination/Pagination";
 import Link from "next/link";
 import css from "@/components/NotesPage/NotesPage.module.css";
 
-interface NotesClientProps {
-  initialFilter: string;
-}
-
-export default function Notes({ initialFilter }: NotesClientProps) {
+export default function Notes({ initialFilter }: { initialFilter: string }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   const [search, setSearch] = useState(searchParams.get("search") || "");
-  const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
   const [debouncedSearch] = useDebounce(search, 500);
+
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
-    const currentSearch = searchParams.get("search") || "";
-    const currentPage = Number(searchParams.get("page")) || 1;
+    if (debouncedSearch) params.set("search", debouncedSearch);
+    else params.delete("search");
 
-    if (debouncedSearch !== currentSearch || page !== currentPage) {
-      if (debouncedSearch) params.set("search", debouncedSearch);
-      else params.delete("search");
+    params.delete("page");
 
-      params.set("page", page.toString());
-      router.push(`${pathname}?${params.toString()}`, { scroll: false });
-    }
-  }, [debouncedSearch, page, pathname, router, searchParams]);
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  }, [debouncedSearch, pathname, router, searchParams]);
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["notes", initialFilter, debouncedSearch, page],
@@ -64,15 +57,12 @@ export default function Notes({ initialFilter }: NotesClientProps) {
   return (
     <div className={css.app}>
       <div className={css.toolbar}>
-        <div className={css.headerGroup}>
-          <h2 className={css.pageTitle}>
-            {initialFilter === "all" ? "Усі записи" : `${initialFilter} Notes`}
-          </h2>
-        </div>
-
+        <h2 className={css.pageTitle}>
+          {initialFilter === "all" ? "Усі записи" : `${initialFilter} Notes`}
+        </h2>
         <div className={css.controls}>
           <SearchBox value={search} onChange={handleSearchChange} />
-          <Link href="/notes/action/create" className={css.createLink}>
+          <Link href="/notes/action/create">
             <button className={css.button}>+ Add Note</button>
           </Link>
         </div>

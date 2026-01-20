@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   description: "Організовуйте свої думки та завдання ефективно з NoteHub.",
   openGraph: {
     title: "NoteHub — Розумне керування нотатками",
-    description: "Зберігайте важливе в одному місці.",
+    description: "Організовуйте свої думки та завдання ефективно з NoteHub.",
     url: "https://notehub-client.vercel.app",
     images: [
       {
@@ -32,8 +32,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  modal,
 }: {
   children: React.ReactNode;
+  modal: React.ReactNode;
 }) {
   return (
     <html lang="uk" className={robotoFont.variable}>
@@ -41,6 +43,7 @@ export default function RootLayout({
         <TanStackProvider>
           <Header />
           <main style={{ minHeight: "85vh" }}>{children}</main>
+          {modal}
           <Footer />
         </TanStackProvider>
       </body>

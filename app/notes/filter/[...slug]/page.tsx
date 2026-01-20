@@ -16,6 +16,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: `Перегляд усіх нотаток у розділі ${displayTag}. Ваші ідеї в повному порядку.`,
     openGraph: {
       title,
+      description: `Перегляд усіх нотаток у розділі ${displayTag}.`,
       url: `https://notehub-app.vercel.app/notes/filter/${tag}`,
       images: ["https://ac.goit.global/fullstack/react/notehub-og-meta.jpg"],
     },
@@ -24,5 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function FilterPage({ params }: Props) {
   const { slug } = await params;
-  return <Notes initialFilter={slug[0] || "all"} />;
+  const currentFilter = slug[0] || "all";
+
+  return <Notes key={currentFilter} initialFilter={currentFilter} />;
 }
